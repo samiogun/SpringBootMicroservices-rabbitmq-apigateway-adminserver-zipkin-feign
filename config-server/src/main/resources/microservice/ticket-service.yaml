@@ -1,0 +1,61 @@
+server:
+  port: 8333
+
+spring:
+  application:
+    name: ticket-service
+
+  boot:
+    admin:
+      client:
+        url: ${SPRING_BOOT_ADMIN_SERVER_URL:http://localhost:11111}
+
+  datasource:
+    url: jdbc:mysql://localhost:52796/ticket
+    username: root
+    password: mysql
+#    driver-class-name: com.mysql.jdbc.Driver     Loading class `com.mysql.jdbc.Driver'. This is deprecated. The new driver class is `com.mysql.cj.jdbc.Driver'. The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary.
+
+  jpa:
+    show-sql: true
+    database: mysql
+    hibernate:
+      ddl-auto: update
+
+  elasticsearch:
+    username: elastic
+    password: elastic
+
+  rabbitmq:
+    username: ersun
+    password: ersun
+    port: 5672
+
+  cloud:
+#    function:
+#      definition: writeToQueue
+    stream:
+      rabbit:
+        bindings:
+          output:
+            producer:
+              routingKeyExpression: "'ticket-service-to-notification-service'"
+
+      bindings:
+        output:
+          group: ticket-service
+          destination: ticket-service-out-notification-service-in
+
+  zipkin:
+    base-url: http://localhost:9411
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:9999}/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

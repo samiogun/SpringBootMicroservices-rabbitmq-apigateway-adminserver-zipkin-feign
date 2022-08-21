@@ -1,0 +1,36 @@
+server:
+  port: 12345
+
+spring:
+  application:
+    name: api-gateway-service
+
+  boot:
+    admin:
+      client:
+        url: ${SPRING_BOOT_ADMIN_SERVER_URL:http://localhost:11111}
+
+  cloud:
+    gateway:
+      routes:
+        - id: ticket-service
+          uri: lb://ticket-service
+          predicates:
+            - Path=/v1/tickets/**
+
+        - id: account-service
+          uri: lb://account-service
+          predicates:
+            - Path=/v1/accounts/**
+
+eureka:
+  client:
+    register-with-eureka: false
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:9999}/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

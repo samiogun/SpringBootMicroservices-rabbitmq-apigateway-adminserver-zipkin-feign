@@ -1,0 +1,9 @@
+# Project exclude paths
+/account-service/target/
+/admin-server/target/
+/api-gateway-service/target/
+/config-server/target/
+/eureka-server/target/
+/feign-parent/target/
+/notification-service/target/
+/ticket-service/target/

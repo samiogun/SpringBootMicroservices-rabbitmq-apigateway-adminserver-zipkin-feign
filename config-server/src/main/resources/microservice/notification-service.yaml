@@ -1,0 +1,44 @@
+server:
+  port: 7777
+
+spring:
+  application:
+    name: notification-service
+
+  boot:
+    admin:
+      client:
+        url: ${SPRING_BOOT_ADMIN_SERVER_URL:http://localhost:11111}
+
+  rabbitmq:
+    username: ersun
+    password: ersun
+
+  zipkin:
+    base-url: http://localhost:9411
+
+  cloud:
+    function:
+      definition: sendNotification
+    stream:
+      rabbit:
+        bindings:
+          sendNotification-in-0:
+            consumer:
+              bindingRoutingKey: ticket-service-to-notification-service
+      bindings:
+#        contentType: application/json
+        sendNotification-in-0:
+          destination: ticket-service-out-notification-service-in
+          group: notification-service-send-email-queue
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:9999}/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
