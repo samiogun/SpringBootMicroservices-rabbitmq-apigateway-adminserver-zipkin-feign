@@ -2,5 +2,20 @@ spring:
   application:
     name: notification-service
 
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server-application
+      fail-fast: true
+      retry:
+        initial-interval: 1000
+        max-attempts: 50
+
   config:
-    import: ${CONFIG_SERVER_URL:optional:configserver:http://localhost:8888}
+    import: configserver:config-server-application
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:9999}/eureka
